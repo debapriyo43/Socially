@@ -23,10 +23,9 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   Uint8List? _image;
-
+  bool _isLoading = false;
   @override
   void dispose() {
-    // TODO: implement dispose
     _passwordController.dispose();
     _emailController.dispose();
     _bioController.dispose();
@@ -36,10 +35,32 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void selectImage() async {
     print('function called');
-    Uint8List im = await pickImage(ImageSource.gallery).then();
+    Uint8List im = await pickImage(ImageSource.gallery);
     setState(() {
       _image = im;
+      if (_image != null) {
+        print('Working');
+      }
     });
+  }
+
+  void signUpUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().signUpUser(
+        email: _emailController.text,
+        password: _passwordController.text,
+        username: _usernameController.text,
+        bio: _bioController.text,
+        file: _image!);
+    setState(() {
+      _isLoading = false;
+    });
+    if (res != 'success') {
+      showSnakBar(res, context);
+    }
+    print(res);
   }
 
   @override
@@ -127,17 +148,15 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             //log in button
             InkWell(
-              onTap: () async {
-                String res = await AuthMethods().signUpUser(
-                    email: _emailController.text,
-                    password: _passwordController.text,
-                    username: _usernameController.text,
-                    bio: _bioController.text,
-                    file: _image!);
-                // file:
-                print(res);
-              },
+              onTap: signUpUser,
               child: Container(
+                child: _isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: primaryColor,
+                        ),
+                      )
+                    : const Text('sign up'),
                 width: double.infinity,
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(vertical: 10),
@@ -149,7 +168,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   color: Colors.blue,
                 ),
-                child: const Text('Signup'),
               ),
             ),
             SizedBox(height: 12),

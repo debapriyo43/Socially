@@ -24,11 +24,11 @@ class AuthMethods {
           username.isNotEmpty ||
           bio.isNotEmpty ||
           file != null) {
-        //register user
-        //add user to our database
+        // register user
+        // add user to our database
         // this will make a collection users and make a unique identification id and based on that will store the data.
-        // String photoUrl = await StorageMethods()
-        //     .uploadImageToStorage('profilePics', file, false);
+        String photoUrl = await StorageMethods()
+            .uploadImageToStorage('profilePics', file, false);
         _auth
             .createUserWithEmailAndPassword(email: email, password: password)
             .then((value) async {
@@ -39,7 +39,7 @@ class AuthMethods {
             'bio': bio,
             'followers': [],
             'following': [],
-            // 'photoUrl': photoUrl,
+            'photoUrl': photoUrl,
           });
         });
         res = "Success";

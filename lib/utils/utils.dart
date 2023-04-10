@@ -8,6 +8,11 @@ pickImage(ImageSource source) async {
     return await file.readAsBytes();
   }
 }
+
+showSnakBar(String content, BuildContext context) {
+  //SnackBar is a widget which will pop out from bottom of the app.
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(content)));
+}
 // Future pickImage(ImageSource source) async {
 //   try {
 //     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -19,4 +24,4 @@ pickImage(ImageSource source) async {
 //   } catch (error) {
 //     print("error: $error");
 //   }
-// } 
+// }
