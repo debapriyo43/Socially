@@ -10,6 +10,15 @@ class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<model.User> getUserDetails() async {
+    User currentUser = _auth.currentUser!;
+    DocumentSnapshot snap = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+    return model.User.fromSnap(snap);
+  }
+
   //signupuser
   Future<String> signUpUser({
     required final String email,
@@ -43,14 +52,10 @@ class AuthMethods {
           following: [],
           photoUrl: photoUrl,
         );
-        _auth
-            .createUserWithEmailAndPassword(email: email, password: password)
-            .then((value) async {
-          await _firestore
-              .collection('users')
-              .doc(value.user!.uid)
-              .set(user.toJson());
-        });
+        await _firestore
+            .collection('users')
+            .doc(cred.user!.uid)
+            .set(user.toJson());
 
         res = "success";
       }
