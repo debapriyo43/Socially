@@ -10,6 +10,7 @@ pickImage(ImageSource source) async {
 }
 
 showSnakBar(String content, BuildContext context) {
+  // This snackbar uses as general snack bar
   //SnackBar is a widget which will pop out from bottom of the app.
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(content)));
 }
