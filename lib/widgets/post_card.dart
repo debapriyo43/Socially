@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/resources/firestore_methods.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
@@ -82,42 +83,57 @@ class _PostCardState extends State<PostCard> {
                 ),
               ],
             ),
-            //image section
           ),
-
-          Stack(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.35,
-                width: double.infinity,
-                child: Image.network(
-                  widget.snap['postUrl'],
-                  fit: BoxFit.cover,
+          //image section
+          GestureDetector(
+            onDoubleTap: () async {
+              await FirestoreMethods().likePost(
+                  widget.snap['postId'], user!.uid, widget.snap['likes']);
+              setState(() {
+                isLikeAnimating = true;
+              });
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.35,
+                  width: double.infinity,
+                  child: Image.network(
+                    widget.snap['postUrl'],
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              LikeAnimationState(
-                child: Icon(
-                  Icons.favorite,
-                  color: Colors.white,
-                  size: 100,
-                ),
-                isAnimating: isLikeAnimating,
-                duration: const Duration(
-                  milliseconds: 400,
-                ),
-                onEnd: () {
-                  setState(() {
-                    isLikeAnimating = true;
-                  });
-                },
-              )
-            ],
+                AnimatedOpacity(
+                  duration: const Duration(
+                    milliseconds: 200,
+                  ),
+                  opacity: isLikeAnimating ? 1 : 0,
+                  child: LikeAnimation(
+                    isAnimating: isLikeAnimating,
+                    duration: const Duration(
+                      milliseconds: 500,
+                    ),
+                    onEnd: () {
+                      setState(() {
+                        isLikeAnimating = false;
+                      });
+                    },
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                      size: 120,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
 
           //like comment section
           Row(
             children: [
-              LikeAnimationState(
+              LikeAnimation(
                 isAnimating: widget.snap['likes'].contains(user!.uid),
                 smallLike: true,
                 child: IconButton(
