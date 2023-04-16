@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/utils/colors.dart';
 
+import '../widgets/follow_button.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -23,27 +25,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                Row(children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.grey,
-                    backgroundImage: NetworkImage(
-                      'https://plus.unsplash.com/premium_photo-1673264933445-0112f3cdcb2f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+                Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.grey,
+                      backgroundImage: NetworkImage(
+                        'https://plus.unsplash.com/premium_photo-1673264933445-0112f3cdcb2f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+                      ),
+                      radius: 50,
                     ),
-                    radius: 50,
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              buildStatColumn(20, "posts"),
+                              buildStatColumn(16, "followers"),
+                              buildStatColumn(34, "following"),
+                            ],
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                FollowButton(
+                                  text: 'Edit profile',
+                                  backgroundColor: mobileBackgroundColor,
+                                  textColor: primaryColor,
+                                  borderColor: Colors.grey,
+                                  function: () {},
+                                ),
+                              ])
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(
+                    top: 15,
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        buildStatColumn(20, "posts"),
-                        buildStatColumn(16, "followers"),
-                        buildStatColumn(34, "following"),
-                      ],
+                  child: Text(
+                    'username',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
-                  )
-                ])
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(
+                    top: 2,
+                  ),
+                  child: Text(
+                    'description',
+                  ),
+                )
               ],
             ),
           ),
